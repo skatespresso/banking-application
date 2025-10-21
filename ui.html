@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="ui.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Välkommen till din bank</title>
+</head>
+<body>
+    <div id="appcontent">
+    <div id="info">
+        <h2>Din bank</h2>
+        <p>Hej och välkommen!</p>
+    </div>
+        
+        <div class="tab">
+            <button id="accountTab" class="tablinks">Dina konton</button>
+            <button id="depositTab" class="tablinks">Sätt in pengar</button>
+            <button id="withdrawTab" class="tablinks">Ta ut pengar</button>
+            <button id="transferTab" class="tablinks">Överför pengar</button>
+        </div>
+        
+        <div id="accounts" class="tabcontent">
+            <h3>Dina konton</h3>
+            <p>Här får du en översikt av dina konton och kan skapa nya.</p>
+            <button id="createAccount" class="actionbtns">Skapa nytt konto</button>
+        </div>
+        
+        <div id="deposit" class="tabcontent">
+            <h3>Sätt in pengar</h3>
+            <p>Här kan du sätta in pengar från en annan bank.</p>
+            <input type="number" id="depositAmount" placeholder="Belopp att sätta in">
+            <button id="depositBtn" class="actionbtns">Sätt in pengar</button>
+        </div>
+        
+        <div id="withdraw" class="tabcontent">
+            <h3>Ta ut pengar</h3>
+            <p>Här kan du ta ut pengar och överföra dem till en annan bank.</p>
+            <input type="number" id="withdrawAmount" placeholder="Belopp att ta ut">
+            <button id="withdrawBtn" class="actionbtns">Ta ut pengar</button>
+        </div>
+        <div id="transfer" class="tabcontent">
+            <h3>Överför pengar</h3>
+            <p>Här kan du överföra pengar mellan dina konton.</p>
+            <input type="number" id="transferAmount" placeholder="Belopp att överföra">
+            <input type="text" id="fromAccount" placeholder="Från konto">
+            <input type="text" id="toAccount" placeholder="Till konto">
+            <button id="transferBtn" class="actionbtns">Överför pengar</button>
+        </div>
+    
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>

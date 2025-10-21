@@ -1,0 +1,55 @@
+body {
+    background-color:#011627;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+}
+
+#appcontent {
+    width: 50%;
+}
+
+#info {
+    background-color:#2EC4B6;
+    border-radius: 24px;
+    padding: 8px 12px;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.tab {
+    outline: none;
+    background-color: #facdc5;
+    border-radius: 16px 16px 0px 0px;
+    width: 100%;
+}
+
+.tab button {
+    cursor: pointer;
+    outline: none;
+    padding: 16px 14px;
+    background-color: #facdc5;
+    border-radius: inherit;
+    border: none;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.tab button.active {
+    background-color:#ffad9e;
+}
+
+.tab button:hover {
+    background-color: #ffad9e;
+}
+
+.tabcontent {
+    background-color: #ffad9e;
+    padding: 16px;
+    border-radius: 0px 0px 16px 16px;
+    border-top: none;
+    width: 100%;
+}
