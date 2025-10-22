@@ -2,53 +2,71 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <script src="dist/index.js" type="module"></script>
     <link rel="stylesheet" href="ui.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Red+Rose:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Välkommen till din bank</title>
 </head>
 <body>
-    <div id="appcontent">
-    <div id="info">
-        <h2>Din bank</h2>
-        <p>Hej och välkommen!</p>
-    </div>
-        
-        <div class="tab">
-            <button id="accountTab" class="tablinks">Dina konton</button>
-            <button id="depositTab" class="tablinks">Sätt in pengar</button>
-            <button id="withdrawTab" class="tablinks">Ta ut pengar</button>
-            <button id="transferTab" class="tablinks">Överför pengar</button>
+
+  <div id="appcontent">
+        <div id="info">
+            <h1>Din bank</h1>
+            <p>Hej och välkommen!</p>
+        </div>  
+        <div class="tabs">
+            <button data-tab-target="#accounts" class="active tab">Dina konton</button>
+            <button data-tab-target="#deposit" class="tab">Sätt in pengar</button>
+            <button data-tab-target="#withdraw" class="tab">Ta ut pengar</button>
+            <button data-tab-target="#transfer" class="tab">Överför pengar</button>
         </div>
         
-        <div id="accounts" class="tabcontent">
-            <h3>Dina konton</h3>
-            <p>Här får du en översikt av dina konton och kan skapa nya.</p>
-            <button id="createAccount" class="actionbtns">Skapa nytt konto</button>
+        <div class="tab-content">
+            <div id="accounts" data-tab-content class="active">
+                <h3>Dina konton</h3>
+                <div id="existingacc">  
+                </div>
+                <div id="newAcc">
+                  <h3>Starta ett nytt konto</h3>
+                  <p>Vad vill du att ditt nya konto ska heta?</p>
+                  <input type="text" name="" id="accnameinput" placeholder="Kontonamn">                  <button id="createAccount" class="actionbtns">Skapa nytt konto</button>
+                </div>
+            </div>
+            
+            <div id="deposit" data-tab-content>
+                <h3>Sätt in pengar</h3>
+                <p>Här kan du sätta in pengar från en annan bank.</p>
+                <form id="depositaction">
+                  <input type="number" min="1" id="depositAmount" placeholder="Belopp att sätta in">
+                  <button id="depositBtn" class="actionbtns">Sätt in pengar</button>
+                </form>
+            </div>
+            
+            <div id="withdraw" data-tab-content>
+                <h3>Ta ut pengar</h3>
+                <p>Här kan du ta ut pengar och överföra dem till en annan bank.</p>
+                <form id="withdrawaction">
+                <input type="number" id="withdrawAmount" placeholder="Belopp att ta ut">
+                <button id="withdrawBtn" class="actionbtns">Ta ut pengar</button>
+                </form>
+            </div>
+
+            <div id="transfer" data-tab-content>
+                <h3>Överför pengar</h3>
+                <p>Här kan du överföra pengar mellan dina konton.</p>
+                <form id="transferaction">
+                <input type="text" id="fromAccount" placeholder="Från konto">
+                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                  <input type="text" id="toAccount" placeholder="Till konto">
+                  <input type="number" id="transferAmount" placeholder="Belopp att överföra">
+                  <button id="transferBtn" class="actionbtns">Överför pengar</button>'
+                </form>
+            </div>
         </div>
-        
-        <div id="deposit" class="tabcontent">
-            <h3>Sätt in pengar</h3>
-            <p>Här kan du sätta in pengar från en annan bank.</p>
-            <input type="number" id="depositAmount" placeholder="Belopp att sätta in">
-            <button id="depositBtn" class="actionbtns">Sätt in pengar</button>
-        </div>
-        
-        <div id="withdraw" class="tabcontent">
-            <h3>Ta ut pengar</h3>
-            <p>Här kan du ta ut pengar och överföra dem till en annan bank.</p>
-            <input type="number" id="withdrawAmount" placeholder="Belopp att ta ut">
-            <button id="withdrawBtn" class="actionbtns">Ta ut pengar</button>
-        </div>
-        <div id="transfer" class="tabcontent">
-            <h3>Överför pengar</h3>
-            <p>Här kan du överföra pengar mellan dina konton.</p>
-            <input type="number" id="transferAmount" placeholder="Belopp att överföra">
-            <input type="text" id="fromAccount" placeholder="Från konto">
-            <input type="text" id="toAccount" placeholder="Till konto">
-            <button id="transferBtn" class="actionbtns">Överför pengar</button>
-        </div>
-    
-    </div>
-    <script src="index.js"></script>
+  </div>      
 </body>
 </html>

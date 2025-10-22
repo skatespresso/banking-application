@@ -1,32 +1,97 @@
+.red-rose-regular {
+  font-family: "Red Rose", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+.red-rose-bold {
+  font-family: "Red Rose", serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
 body {
     background-color:#011627;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-
+    font-family: "Red Rose", serif;
 }
 
 #appcontent {
     width: 50%;
 }
 
+#existingacc {
+    margin-bottom: 48px;
+}
+
+.actionbtns {
+    margin-top: 12px;
+    padding: 8px 12px;
+    background-color: #011627;
+    color: #fff4f3;
+    border: none;
+    border-radius: 20px;
+}
+
+.actionbtns:hover {
+    background-color: #19364d;
+}
+
 #info {
     background-color:#2EC4B6;
-    border-radius: 24px;
+    border-radius: 16px;
     padding: 8px 12px;
     width: 100%;
     margin-bottom: 8px;
+}
+
+
+[data-tab-content] {
+    display: none;
+}
+.active[data-tab-content] {
+    display: block;
 }
 
 .tab {
     outline: none;
     background-color: #facdc5;
     border-radius: 16px 16px 0px 0px;
-    width: 100%;
+    min-width: auto;
 }
 
-.tab button {
+.tabs {
+     cursor: pointer;
+     display:flex;
+     border-radius: 16px 16px 0px 0px;
+     width: auto;
+     background-color: #facdc5;
+}
+
+
+.tabs button.active {
+    background-color:#ffad9e;
+    font-weight: 600;
+}
+
+.tabs button {
     cursor: pointer;
     outline: none;
     padding: 16px 14px;
@@ -37,16 +102,13 @@ body {
     font-family: inherit;
     font-size: inherit;
 }
-
-.tab button.active {
-    background-color:#ffad9e;
-}
-
-.tab button:hover {
+.tabs button:hover {
     background-color: #ffad9e;
+    
 }
 
-.tabcontent {
+
+.tab-content {
     background-color: #ffad9e;
     padding: 16px;
     border-radius: 0px 0px 16px 16px;
