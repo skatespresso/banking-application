@@ -1,20 +1,22 @@
 class konto {
-        private id: number;
-        private name: string;
-        private saldo: number;
+        private id: number; // property som förvarar konto-ID
+        private kontonamn: string; //property som förvarar kontots användarnamn
+        private saldo: number; //property som förvarar konto-saldot
 
-        constructor(id: number, name: string) {
+        constructor(id: number, name: string) { //Metod för när nytt konto skapas
             this.id = id;
-            this.name =name;
+            this.kontonamn =name;
             this.saldo = 0;
         }
+
+        //Hämta-data-metoder
 
         hamtaId(): number {
             return this.id;
         }
 
         hamtaNamn(): string {
-            return this.name;
+            return this.kontonamn;
         }
 
         hamtaSaldo(): number {
@@ -36,13 +38,13 @@ class konto {
         }
     }
 
-class bank {
-    private konton: konto[];
-    private nextId: number;
+class bank { 
+    private konton: konto[]; //förbereder array för att förvara konton
+    private nextId: number; //property för att förvara kontoID-"räkning"
 
     constructor() {
-        this.konton = [];
-        this.nextId = 1;
+        this.konton = []; //vid sidladdning blir konton en tom array
+        this.nextId = 1; //kollar vad nästa lediga kontoID är, det börjar på 1
     }
 
     skapaKonto(name: string): konto {
@@ -59,131 +61,226 @@ class bank {
     hittaKonto(id: number): konto | undefined {
         return this.konton.find(konto => konto.hamtaId() === id);
     }
-
 }
-
-//Funktioner
 
 document.addEventListener("DOMContentLoaded", () => {
-    const dinBank = new bank();
-
-    
-
-function accountsTabContent() {
-    const accountsCont = document.getElementById("accounts")!;
-    const existingAccs = document.querySelector("#existingacc")!;
-    
-    // Clear existing content first
-    existingAccs.innerHTML = "";
-    
+    const dinBank = new bank(); //vid varje sidladdning skapas en ny instans av "bank"
     const konton = dinBank.hamtaKonton();
-    
-    if (konton.length === 0) {
-        const noAcc = document.createElement("p");
-        noAcc.innerText = "Du verkar inte ha några konton. Börja spara genom att starta ett!";
-        existingAccs.appendChild(noAcc);
-    } else {
-        konton.forEach(konto => {
-            let kontoInfo = document.createTextNode(`Konto ${konto.hamtaId()}: ${konto.hamtaNamn()} - ${konto.hamtaSaldo()} kr`);
-            existingAccs.appendChild(kontoInfo);
-            existingAccs.appendChild(document.createElement('br'));
-        });
-    }
-}
 
-const createAccBtn = document.querySelector("#createAccount");
-const accNameInput = document.querySelector("#accnameinput") as HTMLInputElement;
+    //error messages. pls dont roast me, i know, i know
+    const accountMsg = document.createElement("p");
+    const depositMsg = document.createElement("p");
+    const withdrawMsg = document.createElement("p");
+    const transferMsg = document.createElement("p");
 
-createAccBtn?.addEventListener('click', (e) => {
-    e.preventDefault();
-    const accountName = accNameInput?.value.trim();
+    //class för styling
+    accountMsg.className = "error-message";
+    depositMsg.className = "error-message";
+    withdrawMsg.className = "error-message";
+    transferMsg.className = "error-message";
 
-     if (accountName) {
-        dinBank.skapaKonto(accountName);
-        accountsTabContent();
-        accNameInput.value = ""; 
-    }
-});
-
-accountsTabContent();
-
-const accountDropDown = document.createElement("select");
-const konton = dinBank.hamtaKonton();
-const defaultOp = document.createElement("option");
-defaultOp.value = "";
-defaultOp.textContent = "Välj konto";
-defaultOp.disabled = true;
-defaultOp.selected = true;
-accountDropDown.appendChild(defaultOp);
-
-konton.forEach(konto => {
-    const option = document.createElement("option")
-    option.value = konto.hamtaId().toString();
-    option.textContent = `${konto.hamtaNamn()} - ${konto.hamtaSaldo()} kr`;
-    accountDropDown.appendChild(option);
-})
-
-
-
-function depositTabContent() {
-const depositAct = document.querySelector("#depositaction");
-depositAct?.appendChild(accountDropDown);
-
-
-}
-
-function withdrawTabContent(){
-    const depositAct = document.querySelector("#depositaction");
-depositAct?.appendChild(accountDropDown);
-
-}
-
-
-function transferTabContent(){
-
-}
-
-
-
-    //Ui funktionalitet
-
-function getTabContent(tabID: string){
-    switch(tabID){
-         case '#accounts':
-            accountsTabContent();
-            break;
-        case '#deposit':
-            depositTabContent();
-            break;
-        case '#withdraw':
-            withdrawTabContent();
-            break;
-        case '#transfer':
-            transferTabContent();
-            break;       
-    }
-}
     const tabs = document.querySelectorAll<HTMLElement>('[data-tab-target]')
     const tabContents = document.querySelectorAll<HTMLElement>('[data-tab-content]')
+    const createAccBtn = document.querySelector("#createAccount");
+    const accNameInput = document.querySelector("#accnameinput") as HTMLInputElement;
 
-    tabs.forEach(tab => {
+    createAccBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        const createAccForm = document.querySelector("#createAccForm");
+        createAccForm?.appendChild(accountMsg);
+        const accountName = accNameInput?.value.trim();
+
+            if (accountName) {
+                dinBank.skapaKonto(accountName);
+                accountsTabContent();
+                fillAllDropdowns();
+                accNameInput.value = ""; 
+                accountMsg.textContent = "";
+            } else {
+                accountMsg.textContent = "Ge ditt konto ett namn först.";
+                return;
+            }
+    });
+
+        tabs.forEach(tab => {
         tab.addEventListener("click", () => {
-            const tabSelector = tab.dataset.tabTarget;
-            if (!tabSelector) return;
-            
-            const target = document.querySelector(tabSelector) as HTMLElement | null;
-            if (!target) return;
-            
-            // Remove active classes
-            tabContents.forEach(tabContent => tabContent.classList.remove("active"));
-            tabs.forEach(tab => tab.classList.remove("active"));
-            
-            // Add active classes
-            tab.classList.add("active");
-            target.classList.add("active");
-            
-            // Update content for the active tab
-            getTabContent(tabSelector);
+        const tabSelector = tab.dataset.tabTarget;
+        if (!tabSelector) return;
+                
+        const target = document.querySelector(tabSelector) as HTMLElement | null;
+        if (!target) return;
+
+        tabContents.forEach(tabContent => tabContent.classList.remove("active"));
+        tabs.forEach(tab => tab.classList.remove("active"));
+                        
+        tab.classList.add("active");
+        target.classList.add("active");
+                
+            if (tabSelector ==='#accounts'){
+                accountsTabContent();
+            }
         });
     });
+
+    function fillAllDropdowns() { //not my proudest work men det funkar :')
+        const depositDropdown = document.getElementById("depositSelect") as HTMLSelectElement;
+        const withdrawDropdown = document.getElementById("withdrawSelect") as HTMLSelectElement;
+        const fromAccountDropdown = document.getElementById("fromAccount") as HTMLSelectElement;
+        const toAccountDropdown = document.getElementById("toAccount") as HTMLSelectElement;   
+        
+        if (depositDropdown) fillDropdown(depositDropdown);
+        if (withdrawDropdown) fillDropdown(withdrawDropdown);
+        if (fromAccountDropdown) fillDropdown(fromAccountDropdown);
+        if (toAccountDropdown) fillDropdown(toAccountDropdown);
+    }
+
+    function fillDropdown(dropdown: HTMLSelectElement) {
+        dropdown.innerHTML = '<option value="">Välj konto...</option>';
+        konton.forEach(konto => {
+            const option = document.createElement("option");
+            option.value = konto.hamtaId().toString();
+            option.textContent = `${konto.hamtaNamn()} - ${konto.hamtaSaldo()} kr`;
+            dropdown.appendChild(option);
+        });
+    }
+
+    function accountsTabContent() {
+        const existingAccs = document.querySelector("#existingacc")!;
+        existingAccs.innerHTML = "";
+        
+        if (konton.length === 0) {
+            const noAcc = document.createElement("p");
+            noAcc.innerText = "Du verkar inte ha några konton. Börja spara genom att starta ett!";
+            existingAccs.appendChild(noAcc);
+        } else {
+            konton.forEach(konto => {
+                let kontoInfo = document.createTextNode(`Konto ${konto.hamtaId()}: ${konto.hamtaNamn()} - ${konto.hamtaSaldo()} kr`);
+                existingAccs.appendChild(kontoInfo);
+                existingAccs.appendChild(document.createElement('br'));
+            });
+        }
+    }
+
+    function depositTabContent() {
+        const depositBtn = document.querySelector("#depositBtn");
+        const depositDiv = document.querySelector("#depositaction");
+        depositDiv?.appendChild(depositMsg);
+
+        depositBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const depositInput = document.querySelector("#depositinput") as HTMLInputElement;
+            const dropdown = document.querySelector("#depositSelect") as HTMLSelectElement; 
+            const targetAccId = dropdown.value;
+            const amount = parseFloat(depositInput.value);
+
+            if(!targetAccId) {
+                depositMsg.textContent = "Välj ett konto först.";
+                return;
+            }
+            if (!amount || amount <= 0) {
+                depositMsg.textContent = "Ange ett giltligt belopp.";
+                return;
+            }
+
+            const selectedAcc = konton.find(konto => konto.hamtaId().toString() === targetAccId);
+
+            if (selectedAcc) {
+                selectedAcc.insattning(amount);
+                console.log(`Satte in ${amount} kr på ${selectedAcc.hamtaNamn()}`);
+                depositMsg.textContent = `Satte in ${amount} kr på ${selectedAcc.hamtaNamn()}`;
+                accountsTabContent();
+                fillAllDropdowns();
+                depositInput.value ="";
+            } else {
+                depositMsg.textContent = "Kunde inte hitta kontot.";
+            }
+        });
+    }
+
+    function withdrawTabContent(){
+        const withdrawBtn = document.querySelector("#withdrawBtn");
+        const withdrawaction = document.querySelector("#withdrawaction");
+        withdrawaction?.appendChild(withdrawMsg);
+
+        withdrawBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const withdrawInput = document.querySelector("#withdrawinput") as HTMLInputElement;
+            const dropdown = document.querySelector("#withdrawSelect") as HTMLSelectElement; 
+            const targetAccId = dropdown.value;
+            const amount = parseFloat(withdrawInput.value);
+            const selectedAcc = konton.find(konto => konto.hamtaId().toString() === targetAccId);
+
+            if(!targetAccId) {
+                withdrawMsg.textContent = "Välj ett konto."
+                return;
+            }
+            if (!amount || amount <= 0) {
+                withdrawMsg.textContent = "Ange ett giltligt belopp.";
+                return;
+            }
+
+            if (selectedAcc) {
+                selectedAcc.uttag(amount);
+                console.log(`Gjorde ett uttag på ${amount} kr på ${selectedAcc.hamtaNamn()}`)  
+                withdrawMsg.textContent = `Gjorde ett uttag på ${amount} kr på ${selectedAcc.hamtaNamn()}`;
+                accountsTabContent();
+                fillAllDropdowns();
+                withdrawInput.value ="";
+            } else {
+                withdrawMsg.textContent = "Kunde inte hitta kontot.";
+            }
+        });
+
+    }
+
+    function transferTabContent(){
+        const transferBtn = document.querySelector("#transferBtn");
+        const transferaction = document.querySelector("#transferaction");
+        transferaction?.appendChild(transferMsg);
+
+        transferBtn?.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const transferInput = document.querySelector("#transferAmount") as HTMLInputElement;
+            const fromDropdown = document.querySelector("#fromAccount") as HTMLSelectElement; 
+            const toDropdown = document.querySelector("#toAccount") as HTMLSelectElement; 
+            const fromAccId = fromDropdown.value;
+            const toAccId = toDropdown.value;
+            const amount = parseFloat(transferInput.value);
+            
+            const fromTarget = konton.find(konto => konto.hamtaId().toString() === fromAccId);
+            const toTarget = konton.find(konto => konto.hamtaId().toString() === toAccId);
+            
+            if(!fromTarget || !toTarget ) {
+                transferMsg.textContent = "Välj både från-konto och till-konto.";
+                return;
+            }
+            if (!amount || amount <= 0) {
+                transferMsg.textContent = "Ange ett giltligt belopp.";
+                return;
+            }
+
+            if (fromTarget && toTarget) {
+                fromTarget.uttag(amount);
+                toTarget.insattning(amount);
+                console.log(`Förde över ${amount} kr från ${fromTarget.hamtaNamn()} till ${toTarget.hamtaNamn()}`);
+                transferMsg.textContent = `Förde över ${amount} kr från ${fromTarget.hamtaNamn()} till ${toTarget.hamtaNamn()}`; 
+                accountsTabContent();
+                fillAllDropdowns();
+                transferInput.value ="";
+            } else {
+                transferMsg.textContent = "Ett av kontona kunde inte hittas.";
+            }
+        });
+    }
+        
+    fillAllDropdowns();
+    accountsTabContent();
+    depositTabContent();
+    withdrawTabContent();
+    transferTabContent();
 });
+

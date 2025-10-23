@@ -1,3 +1,6 @@
+* {
+    box-sizing: border-box;
+}
 .red-rose-regular {
   font-family: "Red Rose", serif;
   font-optical-sizing: auto;
@@ -18,12 +21,6 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
-}
-
-
 body {
     background-color:#011627;
     display: flex;
@@ -35,6 +32,7 @@ body {
 
 #appcontent {
     width: 50%;
+    box-sizing: border-box; 
 }
 
 #existingacc {
@@ -62,7 +60,6 @@ body {
     margin-bottom: 8px;
 }
 
-
 [data-tab-content] {
     display: none;
 }
@@ -74,17 +71,17 @@ body {
     outline: none;
     background-color: #facdc5;
     border-radius: 16px 16px 0px 0px;
-    min-width: auto;
 }
 
 .tabs {
      cursor: pointer;
      display:flex;
      border-radius: 16px 16px 0px 0px;
-     width: auto;
+     width: 100%;
      background-color: #facdc5;
+     box-sizing: border-box; 
+     gap: 0; 
 }
-
 
 .tabs button.active {
     background-color:#ffad9e;
@@ -94,19 +91,26 @@ body {
 .tabs button {
     cursor: pointer;
     outline: none;
-    padding: 16px 14px;
+    padding: 16px 8px;
     background-color: #facdc5;
-    border-radius: inherit;
+    border-radius: 0;
     border: none;
     color: inherit;
     font-family: inherit;
     font-size: inherit;
+    flex: 1;
 }
-.tabs button:hover {
-    background-color: #ffad9e;
-    
+.tabs button:first-child {
+    border-radius: 16px 0 0 0; /
 }
 
+.tabs button:last-child {
+    border-radius: 0 16px 0 0; 
+}
+
+.tabs button:hover {
+    background-color: #ffad9e;   
+}
 
 .tab-content {
     background-color: #ffad9e;
@@ -114,4 +118,9 @@ body {
     border-radius: 0px 0px 16px 16px;
     border-top: none;
     width: 100%;
+}
+
+.error-message {
+    font-size: 14px;
+    margin-top: 1px;
 }

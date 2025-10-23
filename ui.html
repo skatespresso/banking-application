@@ -12,7 +12,6 @@
     <title>Välkommen till din bank</title>
 </head>
 <body>
-
   <div id="appcontent">
         <div id="info">
             <h1>Din bank</h1>
@@ -33,15 +32,21 @@
                 <div id="newAcc">
                   <h3>Starta ett nytt konto</h3>
                   <p>Vad vill du att ditt nya konto ska heta?</p>
-                  <input type="text" name="" id="accnameinput" placeholder="Kontonamn">                  <button id="createAccount" class="actionbtns">Skapa nytt konto</button>
+                  <form id ="createAccForm">
+                    <input type="text" autocomplete="off" id="accnameinput" placeholder="Kontonamn">                  
+                    <button id="createAccount" class="actionbtns">Skapa nytt konto</button>
+                  </form>
                 </div>
             </div>
             
             <div id="deposit" data-tab-content>
                 <h3>Sätt in pengar</h3>
-                <p>Här kan du sätta in pengar från en annan bank.</p>
+                <p>Här kan du sätta in pengar till dina konton.</p>
                 <form id="depositaction">
-                  <input type="number" min="1" id="depositAmount" placeholder="Belopp att sätta in">
+                    <select id="depositSelect" class="dropdown">
+                        <option value="">Välj konto...</option>
+                    </select>
+                  <input type="number" min="1" id="depositinput" placeholder="Belopp att sätta in">
                   <button id="depositBtn" class="actionbtns">Sätt in pengar</button>
                 </form>
             </div>
@@ -50,8 +55,11 @@
                 <h3>Ta ut pengar</h3>
                 <p>Här kan du ta ut pengar och överföra dem till en annan bank.</p>
                 <form id="withdrawaction">
-                <input type="number" id="withdrawAmount" placeholder="Belopp att ta ut">
-                <button id="withdrawBtn" class="actionbtns">Ta ut pengar</button>
+                    <select id="withdrawSelect" class="dropdown">
+                        <option value="">Välj konto...</option>
+                    </select>
+                    <input type="number" id="withdrawinput" placeholder="Belopp att ta ut">
+                    <button id="withdrawBtn" class="actionbtns">Ta ut pengar</button>
                 </form>
             </div>
 
@@ -59,9 +67,13 @@
                 <h3>Överför pengar</h3>
                 <p>Här kan du överföra pengar mellan dina konton.</p>
                 <form id="transferaction">
-                <input type="text" id="fromAccount" placeholder="Från konto">
-                <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                  <input type="text" id="toAccount" placeholder="Till konto">
+                    <select id="fromAccount" class="dropdown">
+                        <option value="">Från konto...</option>
+                    </select>
+                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                    <select id="toAccount" class="dropdown">
+                        <option value="">Till konto...</option>
+                    </select>
                   <input type="number" id="transferAmount" placeholder="Belopp att överföra">
                   <button id="transferBtn" class="actionbtns">Överför pengar</button>'
                 </form>
