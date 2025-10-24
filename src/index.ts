@@ -10,7 +10,6 @@ class konto {
         }
 
         //Hämta-data-metoder
-
         hamtaId(): number {
             return this.id;
         }
@@ -48,26 +47,26 @@ class bank {
     }
 
     skapaKonto(name: string): konto {
-        const nyttKonto = new konto(this.nextId, name);
+        const nyttKonto = new konto(this.nextId, name); //array förvarar konton
         this.konton.push(nyttKonto);
-        this.nextId++;
+        this.nextId++; //iD blir nästa tillgängliga siffra 
         return nyttKonto;
     }
 
-    hamtaKonton(): konto[] {
-        return this.konton;
+    hamtaKonton(): konto[] { 
+        return this.konton; //return array av konto-objekt
     }
 
-    hittaKonto(id: number): konto | undefined {
+    hittaKonto(id: number): konto | undefined {//metod för att söka konton. blev aldrig att jag hann implementera någon användning av detta
         return this.konton.find(konto => konto.hamtaId() === id);
     }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     const dinBank = new bank(); //vid varje sidladdning skapas en ny instans av "bank"
-    const konton = dinBank.hamtaKonton();
+    const konton = dinBank.hamtaKonton(); //läser in de konton som finns i just denna instans
 
-    //error messages. pls dont roast me, i know, i know
+    //clunky sätt att göra error messages. i know i know pls dont roast me
     const accountMsg = document.createElement("p");
     const depositMsg = document.createElement("p");
     const withdrawMsg = document.createElement("p");
@@ -79,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
     withdrawMsg.className = "error-message";
     transferMsg.className = "error-message";
 
-    const tabs = document.querySelectorAll<HTMLElement>('[data-tab-target]')
+    const tabs = document.querySelectorAll<HTMLElement>('[data-tab-target]') //blev så insyltad i att göra tabs för min app...? behövdes det? nej. men det var kul!
     const tabContents = document.querySelectorAll<HTMLElement>('[data-tab-content]')
     const createAccBtn = document.querySelector("#createAccount");
     const accNameInput = document.querySelector("#accnameinput") as HTMLInputElement;
@@ -89,21 +88,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const createAccForm = document.querySelector("#createAccForm");
         createAccForm?.appendChild(accountMsg);
-        const accountName = accNameInput?.value.trim();
+        const accountName = accNameInput?.value.trim(); //det som skrivs i inputfältet blir här kontonamnet
 
-            if (accountName) {
-                dinBank.skapaKonto(accountName);
-                accountsTabContent();
-                fillAllDropdowns();
-                accNameInput.value = ""; 
-                accountMsg.textContent = "";
+            if (accountName) { //läser av ifall inputfältet har fått någon input. 
+                dinBank.skapaKonto(accountName); //skapar själva kontot
+                accountsTabContent();// refreshar taben
+                fillAllDropdowns(); //fyller på data i alla dropdowns
+                accNameInput.value = ""; //clear input field
+                accountMsg.textContent = ""; //clear error msg 
             } else {
-                accountMsg.textContent = "Ge ditt konto ett namn först.";
+                accountMsg.textContent = "Ge ditt konto ett namn först."; //error msg ifall input är tomt vid click
                 return;
             }
     });
 
-        tabs.forEach(tab => {
+        tabs.forEach(tab => { //tabs functionality. behövdes den? nej. skrev jag av den från en tutorial och klippte och klistrade ändå? ja
         tab.addEventListener("click", () => {
         const tabSelector = tab.dataset.tabTarget;
         if (!tabSelector) return;
@@ -111,31 +110,33 @@ document.addEventListener("DOMContentLoaded", () => {
         const target = document.querySelector(tabSelector) as HTMLElement | null;
         if (!target) return;
 
-        tabContents.forEach(tabContent => tabContent.classList.remove("active"));
+        tabContents.forEach(tabContent => tabContent.classList.remove("active")); //vid tab byte, ta bort active från föregående tab
         tabs.forEach(tab => tab.classList.remove("active"));
                         
-        tab.classList.add("active");
+        tab.classList.add("active"); //vid tab byte, ändra till active 
         target.classList.add("active");
                 
-            if (tabSelector ==='#accounts'){
+            if (tabSelector ==='#accounts'){ //den här förstår jag faktiskt inte varför jag behövde, men detta är den enda tab som jag inte har nån dropdown på, och det hade med det att göra
                 accountsTabContent();
             }
         });
     });
 
-    function fillAllDropdowns() { //not my proudest work men det funkar :')
+    function fillAllDropdowns() { //not my proudest work men det funkar :'). 
         const depositDropdown = document.getElementById("depositSelect") as HTMLSelectElement;
         const withdrawDropdown = document.getElementById("withdrawSelect") as HTMLSelectElement;
         const fromAccountDropdown = document.getElementById("fromAccount") as HTMLSelectElement;
         const toAccountDropdown = document.getElementById("toAccount") as HTMLSelectElement;   
-        
+        //det blev den här lösningen efter mycket huvudvärk. jag ville egentligen bara göra ett function och återanvända den, jag fick bara inte det att funka.
+        //tex så skulle jag vilja göra så att ifall man valt ett konto i transfer tab så kan man inte välja det i dropdown nr 2
+
         if (depositDropdown) fillDropdown(depositDropdown);
         if (withdrawDropdown) fillDropdown(withdrawDropdown);
         if (fromAccountDropdown) fillDropdown(fromAccountDropdown);
         if (toAccountDropdown) fillDropdown(toAccountDropdown);
     }
 
-    function fillDropdown(dropdown: HTMLSelectElement) {
+    function fillDropdown(dropdown: HTMLSelectElement) { //den här funktionen körs när ett nytt konto skapas. populates dropdown
         dropdown.innerHTML = '<option value="">Välj konto...</option>';
         konton.forEach(konto => {
             const option = document.createElement("option");
@@ -145,15 +146,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function accountsTabContent() {
+    function accountsTabContent() { //tab med översikt, kontoinformation
         const existingAccs = document.querySelector("#existingacc")!;
         existingAccs.innerHTML = "";
         
-        if (konton.length === 0) {
+        if (konton.length === 0) { //om det inte finns några skapade konton, visa info om det
             const noAcc = document.createElement("p");
             noAcc.innerText = "Du verkar inte ha några konton. Börja spara genom att starta ett!";
             existingAccs.appendChild(noAcc);
-        } else {
+        } else { //annars visa vilka konton som finns, vilket id det har och hur mycket pengar som finns på det
             konton.forEach(konto => {
                 let kontoInfo = document.createTextNode(`Konto ${konto.hamtaId()}: ${konto.hamtaNamn()} - ${konto.hamtaSaldo()} kr`);
                 existingAccs.appendChild(kontoInfo);
@@ -173,33 +174,33 @@ document.addEventListener("DOMContentLoaded", () => {
             const depositInput = document.querySelector("#depositinput") as HTMLInputElement;
             const dropdown = document.querySelector("#depositSelect") as HTMLSelectElement; 
             const targetAccId = dropdown.value;
-            const amount = parseFloat(depositInput.value);
+            const amount = parseFloat(depositInput.value); //definierar input som värdet som ska adderas
 
-            if(!targetAccId) {
+            if(!targetAccId) { //ui meddelanden ifall användaren inte valt ett konto
                 depositMsg.textContent = "Välj ett konto först.";
                 return;
             }
-            if (!amount || amount <= 0) {
+            if (!amount || amount <= 0) {//.. eller skrivit ett belopp
                 depositMsg.textContent = "Ange ett giltligt belopp.";
                 return;
             }
 
-            const selectedAcc = konton.find(konto => konto.hamtaId().toString() === targetAccId);
+            const selectedAcc = konton.find(konto => konto.hamtaId().toString() === targetAccId); //gör så dropdown-val och det sparade kontot länkas ihop
 
             if (selectedAcc) {
-                selectedAcc.insattning(amount);
+                selectedAcc.insattning(amount); //kallar på insättningsmetoden och amount
                 console.log(`Satte in ${amount} kr på ${selectedAcc.hamtaNamn()}`);
-                depositMsg.textContent = `Satte in ${amount} kr på ${selectedAcc.hamtaNamn()}`;
-                accountsTabContent();
-                fillAllDropdowns();
-                depositInput.value ="";
+                depositMsg.textContent = `Satte in ${amount} kr på ${selectedAcc.hamtaNamn()}`; //confirmation message
+                accountsTabContent(); //refreshar info på denna tab
+                fillAllDropdowns(); //refreshar info i dropdowns
+                depositInput.value =""; //clear input
             } else {
-                depositMsg.textContent = "Kunde inte hitta kontot.";
+                depositMsg.textContent = "Kunde inte hitta kontot."; //error msg 
             }
         });
     }
 
-    function withdrawTabContent(){
+    function withdrawTabContent(){ //den här metoden fungerar exakt samma som deposit fast vi kallar på uttag istället
         const withdrawBtn = document.querySelector("#withdrawBtn");
         const withdrawaction = document.querySelector("#withdrawaction");
         withdrawaction?.appendChild(withdrawMsg);
@@ -210,8 +211,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const withdrawInput = document.querySelector("#withdrawinput") as HTMLInputElement;
             const dropdown = document.querySelector("#withdrawSelect") as HTMLSelectElement; 
             const targetAccId = dropdown.value;
-            const amount = parseFloat(withdrawInput.value);
-            const selectedAcc = konton.find(konto => konto.hamtaId().toString() === targetAccId);
+            const amount = parseFloat(withdrawInput.value); //definierar input som det värde som ska subtraheras från kontot och ser till att inte ta emot det om man skriver siffror. ville gärna ha ett inputfält som det bara går att skriva siffor i? kändes som en html type eller nåt men jag fick inte det att fungera så jag gick vidare
+            const selectedAcc = konton.find(konto => konto.hamtaId().toString() === targetAccId);//gör så dropdown-val och det sparade kontot länkas ihop
 
             if(!targetAccId) {
                 withdrawMsg.textContent = "Välj ett konto."
@@ -223,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             if (selectedAcc) {
-                selectedAcc.uttag(amount);
+                selectedAcc.uttag(amount); //kallar på uttag
                 console.log(`Gjorde ett uttag på ${amount} kr på ${selectedAcc.hamtaNamn()}`)  
                 withdrawMsg.textContent = `Gjorde ett uttag på ${amount} kr på ${selectedAcc.hamtaNamn()}`;
                 accountsTabContent();
@@ -236,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    function transferTabContent(){
+    function transferTabContent(){ //den här funktionen är också samma fast vi kallar på båda metoderna
         const transferBtn = document.querySelector("#transferBtn");
         const transferaction = document.querySelector("#transferaction");
         transferaction?.appendChild(transferMsg);
@@ -276,11 +277,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-        
+
+    //refresha alla tabs och dropdown
     fillAllDropdowns();
     accountsTabContent();
     depositTabContent();
     withdrawTabContent();
     transferTabContent();
 });
-
