@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
     withdrawMsg.className = "error-message";
     transferMsg.className = "error-message";
 
-    const tabs = document.querySelectorAll<HTMLElement>('[data-tab-target]') //blev så insyltad i att göra tabs för min app...? behövdes det? nej. men det var kul!
+    const tabs = document.querySelectorAll<HTMLElement>('[data-tab-target]') 
     const tabContents = document.querySelectorAll<HTMLElement>('[data-tab-content]')
     const createAccBtn = document.querySelector("#createAccount");
     const accNameInput = document.querySelector("#accnameinput") as HTMLInputElement;
@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
     });
 
-        tabs.forEach(tab => { //tabs functionality. behövdes den? nej. skrev jag av den från en tutorial och klippte och klistrade ändå? ja
+        tabs.forEach(tab => { //tabs functionality.
         tab.addEventListener("click", () => {
         const tabSelector = tab.dataset.tabTarget;
         if (!tabSelector) return;
@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
         tab.classList.add("active"); //vid tab byte, ändra till active 
         target.classList.add("active");
                 
-            if (tabSelector ==='#accounts'){ //den här förstår jag faktiskt inte varför jag behövde, men detta är den enda tab som jag inte har nån dropdown på, och det hade med det att göra
+            if (tabSelector ==='#accounts'){ 
                 accountsTabContent();
             }
         });
